@@ -108,7 +108,7 @@ body:after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;back
 .hero-description,.hero-footer{animation:fadeup .8s cubic-bezier(.2,.8,.2,1) backwards}
 .hero-description{animation-delay:.55s}.hero-footer{animation-delay:1.9s}
 .terminal{animation:fadeup .8s .8s cubic-bezier(.2,.8,.2,1) both}
-.tline{display:inline-block;clip-path:inset(0 100% 0 0);animation:typeline .7s steps(22,end) forwards;animation-delay:calc(1.2s + var(--i)*.7s)}
+.tline{display:block;width:fit-content;max-width:0;overflow:hidden;white-space:pre;animation:typeline .7s steps(26,end) forwards;animation-delay:calc(1.2s + var(--i)*.7s)}
 .cursor{opacity:0;animation:cursorblink 1.1s steps(1) 3.2s infinite}
 .portrait{animation:photoin 1.3s .25s cubic-bezier(.2,.8,.2,1) both}
 .frame{transition:transform .25s ease-out;will-change:transform}
@@ -136,7 +136,7 @@ body:after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;back
 @keyframes cursorblink{0%,100%{opacity:1}50%{opacity:0}}
 @keyframes wordup{to{transform:none}}
 @keyframes fadeup{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-@keyframes typeline{to{clip-path:inset(0)}}
+@keyframes typeline{to{max-width:26ch}}
 @keyframes photoin{from{opacity:0;transform:translateY(30px) scale(.94);filter:blur(10px)}to{opacity:1;transform:none;filter:none}}
 @keyframes breathe{50%{transform:scale(1.12);opacity:.75}}
 @keyframes shine{60%,100%{transform:translateX(100%)}}
@@ -147,7 +147,7 @@ body:after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;back
 @keyframes panelin{from{opacity:0;transform:scale(.85) translateY(20px)}to{opacity:1;transform:none}}
 @keyframes msgin{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:none}}
 @keyframes dots{0%,100%{opacity:.3}50%{opacity:1}}
-@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}.tline{clip-path:none}.wi{transform:none}}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}.tline{max-width:none}.wi{transform:none}}
 
 /* ===== WhatsApp ===== */
 .wa-btn{display:inline-flex;align-items:center;gap:10px;margin-top:14px;padding:12px 18px;border-radius:9px;background:#25d366;color:#04210f;font:700 14px var(--sans);text-decoration:none;transition:transform .2s,box-shadow .2s}

@@ -14,7 +14,7 @@
   }
   const term = document.querySelector('.terminal');
   if (term) {
-    term.innerHTML = term.innerHTML.split('\n').map((l, i) => `<span class="tline" style="--i:${i}">${l}</span>`).join('\n');
+    term.innerHTML = term.innerHTML.split('\n').map((l, i) => `<span class="tline" style="--i:${i}">${l}</span>`).join('');
   }
 
   /* 2. Bilah progres scroll */
