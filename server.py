@@ -124,7 +124,7 @@ def ask_gemini(history: object) -> str:
     return text or "Maaf, saya belum bisa menjawab itu. Coba tanyakan dengan cara lain."
 
 
-STATIC = {"/styles.css": "text/css; charset=utf-8", "/app.js": "text/javascript; charset=utf-8",
+STATIC = {"/styles.css": "text/css; charset=utf-8", "/app.js": "text/javascript; charset=utf-8", "/fx.js": "text/javascript; charset=utf-8",
           "/gemini-mark.svg": "image/svg+xml", "/admin": "text/html; charset=utf-8", "/": "text/html; charset=utf-8"}
 STATIC_FILES = {"/": "index.html", "/admin": "admin.html"}
 PHOTO_TYPES = {"jpg": "image/jpeg", "jpeg": "image/jpeg", "png": "image/png", "webp": "image/webp"}
@@ -185,7 +185,7 @@ class Handler(BaseHTTPRequestHandler):
                 writer.writerow([("'" + c) if isinstance(c, str) and c[:1] in "=+-@" else c for c in row])
             return self.send_bytes(200, ("\ufeff" + out.getvalue()).encode("utf-8"), "text/csv; charset=utf-8",
                                    {"Content-Disposition": 'attachment; filename="pendaftar-beyond-code.csv"', "Cache-Control": "no-store"})
-        if path in ("/foto-saya", "/foto-saya/"):
+        if path.startswith("/foto-saya") and path.rsplit(".", 1)[-1].lower() in ("jpg", "jpeg", "png", "webp") or path == "/foto-saya":
             for ext, ctype in PHOTO_TYPES.items():
                 photo = ROOT / f"foto-saya.{ext}"
                 if photo.is_file():

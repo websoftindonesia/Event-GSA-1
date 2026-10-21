@@ -83,6 +83,13 @@ form.addEventListener('submit', async (event) => {
     updateProgress();
     statusBox.textContent = 'Pendaftaran berhasil dikirim. Terima kasih sudah berbagi cerita, sampai bertemu di Beyond Code!';
     statusBox.className = 'form-status visible success';
+    const wa = document.querySelector('meta[name="wa-group"]')?.content;
+    if (wa && !wa.includes('GANTI_DENGAN')) {
+      const link = document.createElement('a');
+      link.className = 'wa-btn'; link.href = wa; link.target = '_blank'; link.rel = 'noopener noreferrer';
+      link.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z"/><path stroke-width="3.2" transform="translate(6.3 6.3) scale(.48)" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span>Gabung grup WhatsApp</span>';
+      statusBox.append(link);
+    }
     statusBox.focus();
   } catch (error) {
     statusBox.textContent = error.message || 'Terjadi kendala. Coba lagi sebentar lagi.';
@@ -112,7 +119,7 @@ function toggleChat(open) {
   $('chat-open').setAttribute('aria-expanded', String(open));
   if (open) {
     if (!log.children.length) addMessage('Halo! Saya asisten Gemini untuk pendaftaran Beyond Code. Ada yang bisa saya bantu?', 'bot');
-    chatInput.focus();
+    if (matchMedia('(pointer: fine)').matches) chatInput.focus();
   }
 }
 async function sendChat(text) {
@@ -133,7 +140,7 @@ async function sendChat(text) {
     typing.remove();
     history.pop();
     addMessage(err.message || 'Chatbot sedang bermasalah.', 'bot error');
-  } finally { busy = false; chatInput.focus(); }
+  } finally { busy = false; if (matchMedia('(pointer: fine)').matches) chatInput.focus(); }
 }
 $('chat-open').addEventListener('click', () => toggleChat(panel.hidden));
 $('chat-close').addEventListener('click', () => { toggleChat(false); $('chat-open').focus(); });

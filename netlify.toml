@@ -1,0 +1,11 @@
+[build]
+  publish = "dist"
+  command = "mkdir -p dist && cp index.html admin.html styles.css app.js fx.js gemini-mark.svg dist/ && (cp foto-saya.* dist/ || true)"
+
+[functions]
+  directory = "netlify/functions"
+
+[[redirects]]
+  from = "/admin"
+  to = "/admin.html"
+  status = 200

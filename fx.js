@@ -1,0 +1,126 @@
+(() => {
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (calm) return;
+  const root = document.documentElement;
+  const COLORS = ['#4d8dff', '#a77bff', '#ff7a93'];
+
+  /* 1. Headline: kata naik satu per satu + baris terminal muncul bergantian */
+  const h1 = document.querySelector('.hero h1');
+  if (h1) {
+    const text = h1.textContent.trim();
+    h1.setAttribute('aria-label', text);
+    h1.innerHTML = text.split(' ').map((w, i) => `<span class="w" aria-hidden="true"><span class="wi" style="--i:${i}">${w}</span></span>`).join(' ');
+  }
+  const term = document.querySelector('.terminal');
+  if (term) {
+    term.innerHTML = term.innerHTML.split('\n').map((l, i) => `<span class="tline" style="--i:${i}">${l}</span>`).join('\n');
+  }
+
+  /* 2. Bilah progres scroll */
+  const bar = Object.assign(document.createElement('div'), { className: 'scroll-bar' });
+  document.body.append(bar);
+  const onScroll = () => {
+    const max = root.scrollHeight - innerHeight;
+    bar.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
+  };
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  /* 3. Muncul saat di-scroll */
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.section-heading,.progress-card,.form-card,.form-bottom').forEach((el, i) => {
+    el.classList.add('reveal'); el.style.transitionDelay = `${(i % 3) * 60}ms`; io.observe(el);
+  });
+
+  /* 4. Jaring partikel interaktif di latar */
+  const cv = Object.assign(document.createElement('canvas'), { className: 'net' });
+  document.body.prepend(cv);
+  const ctx = cv.getContext('2d');
+  let W, H, nodes = [], mouse = { x: -999, y: -999 };
+  const resize = () => {
+    const small = innerWidth < 700, d = Math.min(devicePixelRatio || 1, small ? 1.5 : 2);
+    W = innerWidth; H = innerHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
+    const n = Math.min(small ? 28 : 70, Math.floor((W * H) / (small ? 16000 : 22000)));
+    nodes = Array.from({ length: n }, () => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .25, vy: (Math.random() - .5) * .25 }));
+  };
+  resize(); let rw = innerWidth; addEventListener('resize', () => { if (innerWidth !== rw) { rw = innerWidth; resize(); } });
+  addEventListener('pointermove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; root.style.setProperty('--mx', `${e.clientX}px`); root.style.setProperty('--my', `${e.clientY}px`); }, { passive: true });
+  const frame = () => {
+    ctx.clearRect(0, 0, W, H);
+    for (const p of nodes) {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > W) p.vx *= -1; if (p.y < 0 || p.y > H) p.vy *= -1;
+      const dx = p.x - mouse.x, dy = p.y - mouse.y, d2 = dx * dx + dy * dy;
+      if (d2 < 22000) { const f = (1 - d2 / 22000) * .6; p.x += dx * f * .02; p.y += dy * f * .02; }
+    }
+    for (let i = 0; i < nodes.length; i++) {
+      const a = nodes[i];
+      ctx.fillStyle = '#a77bff99'; ctx.beginPath(); ctx.arc(a.x, a.y, 1.4, 0, 6.283); ctx.fill();
+      for (let j = i + 1; j < nodes.length; j++) {
+        const b = nodes[j], d = Math.hypot(a.x - b.x, a.y - b.y);
+        if (d < 130) { ctx.strokeStyle = `rgba(110,140,255,${(1 - d / 130) * .22})`; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
+      }
+      const dm = Math.hypot(a.x - mouse.x, a.y - mouse.y);
+      if (dm < 170) { ctx.strokeStyle = `rgba(167,123,255,${(1 - dm / 170) * .55})`; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke(); }
+    }
+    requestAnimationFrame(frame);
+  };
+  frame();
+
+  if (fine) {
+    /* 5. Foto miring 3D mengikuti kursor */
+    const portrait = document.querySelector('.portrait'), fr = document.querySelector('.frame');
+    if (portrait && fr) {
+      portrait.addEventListener('pointermove', (e) => {
+        const r = portrait.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+        fr.style.transform = `perspective(900px) rotateY(${x * 12}deg) rotateX(${-y * 9}deg) translateZ(0)`;
+      });
+      portrait.addEventListener('pointerleave', () => { fr.style.transform = ''; });
+    }
+    /* 6. Tombol magnetik */
+    document.querySelectorAll('#submit-button,.hero-footer').forEach((el) => {
+      el.addEventListener('pointermove', (e) => {
+        const r = el.getBoundingClientRect();
+        el.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * .18}px,${(e.clientY - r.top - r.height / 2) * .28}px)`;
+      });
+      el.addEventListener('pointerleave', () => { el.style.transform = ''; });
+    });
+    /* 7. Cahaya mengikuti kursor di dalam kartu */
+    document.querySelectorAll('.form-card,.progress-card').forEach((c) => c.addEventListener('pointermove', (e) => {
+      const r = c.getBoundingClientRect(); c.style.setProperty('--cx', `${e.clientX - r.left}px`); c.style.setProperty('--cy', `${e.clientY - r.top}px`);
+    }));
+  }
+
+  /* 8. Riak saat tombol kirim diklik */
+  const sb = document.getElementById('submit-button');
+  sb?.addEventListener('click', (e) => {
+    const r = sb.getBoundingClientRect(), s = Math.max(r.width, r.height) * 2;
+    const rip = Object.assign(document.createElement('i'), { className: 'ripple' });
+    rip.style.cssText = `width:${s}px;height:${s}px;left:${e.clientX - r.left - s / 2}px;top:${e.clientY - r.top - s / 2}px`;
+    sb.append(rip); rip.addEventListener('animationend', () => rip.remove());
+  });
+
+  /* 9. Confetti bintang Gemini saat pendaftaran berhasil */
+  const burst = () => {
+    const c = Object.assign(document.createElement('canvas'), { className: 'confetti' });
+    c.width = innerWidth; c.height = innerHeight; document.body.append(c);
+    const x = c.getContext('2d'), r = (sb || document.body).getBoundingClientRect();
+    const ps = Array.from({ length: 110 }, () => ({ x: r.left + r.width / 2, y: r.top, vx: (Math.random() - .5) * 13, vy: -Math.random() * 13 - 3, s: Math.random() * 9 + 5, rot: Math.random() * 6, vr: (Math.random() - .5) * .3, c: COLORS[Math.floor(Math.random() * 3)], star: Math.random() < .55 }));
+    let t = 0;
+    (function tick() {
+      x.clearRect(0, 0, c.width, c.height); t++;
+      for (const p of ps) {
+        p.vy += .32; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+        x.save(); x.globalAlpha = Math.max(0, 1 - t / 130); x.translate(p.x, p.y); x.rotate(p.rot); x.fillStyle = p.c; x.beginPath();
+        if (p.star) { const k = p.s; x.moveTo(0, -k); x.quadraticCurveTo(0, 0, k, 0); x.quadraticCurveTo(0, 0, 0, k); x.quadraticCurveTo(0, 0, -k, 0); x.quadraticCurveTo(0, 0, 0, -k); }
+        else x.rect(-p.s / 3, -p.s / 3, p.s * .66, p.s * .66);
+        x.fill(); x.restore();
+      }
+      t < 130 ? requestAnimationFrame(tick) : c.remove();
+    })();
+  };
+  const status = document.getElementById('form-status');
+  if (status) new MutationObserver(() => { if (status.classList.contains('success')) burst(); }).observe(status, { attributes: true, attributeFilter: ['class'] });
+})();
