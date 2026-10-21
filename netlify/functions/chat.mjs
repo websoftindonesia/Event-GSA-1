@@ -7,7 +7,7 @@ export default async (req) => {
 
   const key = process.env.GEMINI_API_KEY;
   if (!key) {
-    return json(503, { error: "Chatbot belum aktif. Isi GEMINI_API_KEY di pengaturan environment Netlify." });
+    return json(503, { error: "Chatbot belum aktif. Isi GEMINI_API_KEY di environment Netlify." });
   }
 
   let body;
@@ -19,7 +19,7 @@ export default async (req) => {
 
   const rawMessages = Array.isArray(body?.messages) ? body.messages : [];
   const contents = rawMessages
-    .slice(-12)
+    .slice(-10)
     .filter((m) => m && typeof m.text === "string" && ["user", "assistant"].includes(m.role))
     .map((m) => ({
       role: m.role === "user" ? "user" : "model",
@@ -30,17 +30,21 @@ export default async (req) => {
     return json(400, { error: "Pesan kosong." });
   }
 
-  const model = "gemini-1.5-flash";
+  // Menggunakan model gemini-2.0-flash yang stabil
+  const model = "gemini-2.0-flash";
 
   try {
     const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        systemInstruction: {
-          parts: [{ text: SYSTEM_PROMPT || "Kamu adalah asisten pendaftaran." }]
-        },
-        contents: contents
+        contents: [
+          {
+            role: "user",
+            parts: [{ text: `Instruksi sistem: ${SYSTEM_PROMPT || "Kamu adalah asisten pendaftaran."}` }]
+          },
+          ...contents
+        ]
       })
     });
 
