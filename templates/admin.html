@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Database pendaftar · Beyond Code</title>
+<link rel="icon" href="gemini-mark.svg" type="image/svg+xml">
+<style>
+:root{color-scheme:dark;--line:#222228;--muted:#8a8a94}*{box-sizing:border-box}
+body{margin:0;background:#000;color:#ededf0;font:14px/1.5 system-ui,sans-serif;padding:28px 5%}
+header{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;margin-bottom:22px}
+h1{display:flex;align-items:center;gap:10px;font-size:22px;margin:0}h1 img{width:26px}
+.tools{display:flex;gap:10px;flex-wrap:wrap}input,a.btn,button{height:40px;border-radius:8px;border:1px solid var(--line);background:#0a0a0c;color:#ededf0;padding:0 14px;font:inherit}
+input{min-width:240px}a.btn,button{display:inline-flex;align-items:center;text-decoration:none;cursor:pointer}a.btn:hover,button:hover{border-color:#a77bff}
+:focus-visible{outline:2px solid #4d8dff;outline-offset:2px}
+.stats{display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap}.stat{border:1px solid var(--line);border-radius:10px;padding:12px 18px;background:#08080a}.stat b{display:block;font-size:24px}.stat span{color:var(--muted);font-size:12px}
+.wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}table{width:100%;border-collapse:collapse;min-width:760px}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--muted);font-weight:500;font-size:12px;background:#08080a}
+tr.row{cursor:pointer}tr.row:hover td{background:#0c0c10}tr.detail td{background:#060608;color:#c9c9d1;white-space:pre-wrap}tr.detail b{color:#fff;display:block;margin-top:6px}
+.empty{padding:36px;text-align:center;color:var(--muted)}
+</style></head><body>
+<header><h1><img src="gemini-mark.svg" alt="">Database pendaftar</h1>
+<div class="tools"><input id="q" type="search" placeholder="Cari nama, email, kampus..." aria-label="Cari"><button id="reload" type="button">Muat ulang</button><a class="btn" href="/admin/export.csv">Unduh CSV</a></div></header>
+<div class="stats"><div class="stat"><b id="n-total">0</b><span>Total pendaftar</span></div><div class="stat"><b id="n-today">0</b><span>Hari ini</span></div><div class="stat"><b id="n-uni">0</b><span>Universitas berbeda</span></div></div>
+<div class="wrap"><table><thead><tr><th>#</th><th>Nama</th><th>Email</th><th>Universitas</th><th>Jurusan</th><th>Smt</th><th>Waktu daftar</th></tr></thead><tbody id="rows"></tbody></table></div>
+<script>
+let items=[];const $=id=>document.getElementById(id);
+const fmt=s=>new Date(s).toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'});
+function td(t){const e=document.createElement('td');e.textContent=t;return e}
+function render(){
+  const q=$('q').value.trim().toLowerCase(),body=$('rows');body.replaceChildren();
+  const list=items.filter(r=>[r.full_name,r.email,r.university,r.major].join(' ').toLowerCase().includes(q));
+  if(!list.length){const tr=document.createElement('tr'),c=td(items.length?'Tidak ada hasil.':'Belum ada pendaftar.');c.colSpan=7;c.className='empty';tr.append(c);body.append(tr);return}
+  for(const r of list){
+    const tr=document.createElement('tr');tr.className='row';tr.tabIndex=0;
+    tr.append(td(r.id),td(r.full_name),td(r.email),td(r.university),td(r.major),td(r.semester),td(fmt(r.created_at)));
+    const d=document.createElement('tr');d.className='detail';d.hidden=true;const c=document.createElement('td');c.colSpan=7;
+    const a=document.createElement('b');a.textContent='Mengapa tertarik';const b=document.createElement('b');b.textContent='Harapan satu tahun ke depan';
+    c.append(a,document.createTextNode(r.motivation),b,document.createTextNode(r.expectation));d.append(c);
+    const toggle=()=>{d.hidden=!d.hidden};tr.onclick=toggle;tr.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle()}};
+    body.append(tr,d);
+  }
+}
+async function load(){
+  const res=await fetch('/api/admin/registrations',{cache:'no-store'});
+  if(!res.ok){$('rows').innerHTML='<tr><td class="empty" colspan="7">Gagal memuat data.</td></tr>';return}
+  items=(await res.json()).items;
+  $('n-total').textContent=items.length;
+  const today=new Date().toDateString();$('n-today').textContent=items.filter(r=>new Date(r.created_at).toDateString()===today).length;
+  $('n-uni').textContent=new Set(items.map(r=>r.university.toLowerCase())).size;render();
+}
+$('q').oninput=render;$('reload').onclick=load;load();
+</script></body></html>

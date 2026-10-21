@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+beyond_code.db
+beyond_code.db-shm
+beyond_code.db-wal
+.env
+node_modules/
+dist/
+.netlify/

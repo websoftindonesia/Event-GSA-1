@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <meta name="wa-group" content="https://api.whatsapp.com/send?phone=6285719562762">
+  <meta name="description" content="Formulir pendaftaran Beyond Code.">
+  <title>Daftar Beyond Code</title>
+  <link rel="icon" href="gemini-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <script>(()=>{try{if(matchMedia("(prefers-reduced-motion: reduce)").matches)return}catch(e){}document.documentElement.classList.add("intro")})()</script>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</head>
+<body>
+  <div id="welcome" aria-hidden="true"><div class="w-logo"><svg class="w-spark" viewBox="0 0 24 24" aria-hidden="true"><defs><mask id="wm"><path fill="#fff" d="M12 0C12 6.6 17.4 12 24 12 17.4 12 12 17.4 12 24 12 17.4 6.6 12 0 12 6.6 12 12 6.6 12 0Z"/></mask><filter id="wb" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.6"/></filter></defs><g mask="url(#wm)"><g filter="url(#wb)"><g><circle cx="12" cy="1" r="7" fill="#fa615c"/><circle cx="1" cy="12" r="7" fill="#edb82a"/><circle cx="12" cy="23" r="7" fill="#1ea378"/><circle cx="23" cy="12" r="7" fill="#2b87ee"/><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="6s" repeatCount="indefinite"/></g></g></g></svg><span class="w-word"><span style="--i:0">G</span><span style="--i:1">e</span><span style="--i:2">m</span><span style="--i:3">i</span><span style="--i:4">n</span><span style="--i:5">i</span></span></div><p class="w-sub">Beyond Code × Gemini</p><div class="w-bar"><i></i></div></div>
+  <script>(()=>{const r=document.documentElement,w=document.getElementById("welcome");if(!r.classList.contains("intro")){w.remove();return}let d=0;const end=()=>{if(d)return;d=1;w.classList.add("leave");setTimeout(()=>r.classList.remove("intro"),450);setTimeout(()=>w.remove(),1000)};setTimeout(end,3200);w.addEventListener("click",end);addEventListener("keydown",end,{once:true})})();</script>
+  <main class="page-shell">
+    <header class="topbar">
+      <a class="brand" href="#awal" aria-label="Beyond Code dengan Gemini, kembali ke awal">
+        <img class="gemini-logo" src="gemini-mark.svg" alt=""><span class="brand-name">Beyond Code</span>
+      </a>
+      <span class="top-note"><span class="live-dot"></span> Pendaftaran dibuka</span>
+    </header>
+
+    <section class="hero" id="awal" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <h1 id="hero-title">Kode hanyalah permulaan.</h1>
+        <p class="hero-description">Mengotomatisasi Mahasiswa IT Menjadi Software Engineer Unggul Dengan Agentic AI Bersama.</p>
+        <pre class="terminal" aria-hidden="true"><span class="prompt">$</span> beyond-code register
+<span class="ok">✓</span> status: terbuka
+<span class="prompt">&gt;</span> menunggu cerita kamu<span class="cursor"></span></pre>
+        <a class="hero-footer" href="#registration-form"><span class="arrow-down" aria-hidden="true">↓</span><span>Isi formulir</span></a>
+      </div>
+      <figure class="portrait">
+        <div class="frame">
+          <img src="{{ url_for('static', filename='foto saya.png') }}" alt="Foto">
+        </div>
+        <figcaption class="portrait-name">M. Fawwaz Rayyan K</figcaption>
+        <figcaption class="portrait-credit"><img src="gemini-mark.svg" alt=""> Dibangun bersama Gemini</figcaption>
+      </figure>
+    </section>
+
+    <section class="form-section" aria-labelledby="form-heading">
+      <div class="section-heading">
+        <h2 id="form-heading">Mulai dari kamu.</h2>
+        <p class="required-note"><span>*</span> Wajib diisi</p>
+      </div>
+
+      <form id="registration-form" novalidate>
+        <div class="progress-card" aria-label="Progres pengisian formulir">
+          <div class="progress-top"><div><span class="progress-kicker">Langkah <strong id="progress-step">01</strong> dari 7</span><span class="progress-title" id="progress-title">Kenalan dulu</span></div><span class="progress-count"><strong id="progress-count">0</strong><span> / 7 terisi</span></span></div>
+          <div class="progress-track" role="progressbar" aria-label="Progres formulir" aria-valuemin="0" aria-valuemax="7" aria-valuenow="0"><span id="progress-fill"></span></div>
+          <div class="progress-stages"><span class="stage active" id="stage-profile"><i>1</i> Data diri</span><span class="stage" id="stage-story"><i>2</i> Ceritamu</span></div>
+        </div>
+
+        <div class="form-card">
+          <div class="card-heading"><span class="card-icon">1</span><div><h3>Data diri</h3><p>Supaya kami tahu siapa yang akan bergabung.</p></div></div>
+          <div class="form-grid">
+            <div class="field field-full">
+              <label for="fullName">Nama lengkap <span>*</span></label>
+              <input id="fullName" name="fullName" type="text" autocomplete="name" placeholder="Nama sesuai identitas" minlength="3" maxlength="100" required>
+              <small class="field-hint">Gunakan nama yang biasa kamu pakai.</small>
+              <small class="field-error" id="fullName-error" aria-live="polite"></small>
+            </div>
+            <div class="field">
+              <label for="email">Gmail <span>*</span></label>
+              <input id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="nama@gmail.com" maxlength="254" required>
+              <small class="field-hint">Gunakan alamat email @gmail.com.</small>
+              <small class="field-error" id="email-error" aria-live="polite"></small>
+            </div>
+            <div class="field">
+              <label for="university">Asal universitas <span>*</span></label>
+              <input id="university" name="university" type="text" autocomplete="organization" placeholder="Contoh: Universitas Indonesia" minlength="2" maxlength="150" required>
+              <small class="field-error" id="university-error" aria-live="polite"></small>
+            </div>
+            <div class="field">
+              <label for="major">Asal jurusan <span>*</span></label>
+              <input id="major" name="major" type="text" placeholder="Contoh: Teknik Informatika" minlength="2" maxlength="120" required>
+              <small class="field-error" id="major-error" aria-live="polite"></small>
+            </div>
+            <div class="field">
+              <label for="semester">Semester <span>*</span></label>
+              <div class="select-wrap"><select id="semester" name="semester" required><option value="" disabled selected>Pilih semester</option></select></div>
+              <small class="field-error" id="semester-error" aria-live="polite"></small>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-card story-card">
+          <div class="card-heading"><span class="card-icon">2</span><div><h3>Ceritamu</h3><p>Tak ada jawaban benar atau salah. Ceritakan dengan jujur.</p></div></div>
+          <div class="form-grid">
+            <div class="field field-full essay-field">
+              <div class="label-row"><label for="motivation">Mengapa kamu tertarik mengikuti Beyond Code? <span>*</span></label><span class="counter" id="motivation-count">0 / 500</span></div>
+              <textarea id="motivation" name="motivation" rows="4" placeholder="Ceritakan hal yang membuatmu ingin menjadi bagian dari Beyond Code..." minlength="20" maxlength="500" required></textarea>
+              <small class="field-error" id="motivation-error" aria-live="polite"></small>
+            </div>
+            <div class="field field-full essay-field">
+              <div class="label-row"><label for="expectation">Apa harapanmu satu tahun ke depan? <span>*</span></label><span class="counter" id="expectation-count">0 / 500</span></div>
+              <textarea id="expectation" name="expectation" rows="4" placeholder="Bayangkan dirimu setahun dari sekarang. Apa yang ingin kamu capai?" minlength="20" maxlength="500" required></textarea>
+              <small class="field-error" id="expectation-error" aria-live="polite"></small>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-bottom">
+          <p class="privacy-note"><span aria-hidden="true">◈</span> Data kamu hanya digunakan untuk proses pendaftaran Beyond Code.</p>
+          <button type="submit" id="submit-button"><span>Kirim pendaftaran</span><span class="button-arrow" aria-hidden="true">↗</span></button>
+        </div>
+        <div class="form-status" id="form-status" role="status" aria-live="polite" tabindex="-1"></div>
+      </form>
+    </section>
+
+    <footer class="site-footer"><a class="brand footer-brand" href="#awal" aria-label="Kembali ke awal"><img class="gemini-logo" src="{{ url_for('static', filename='gemini-mark.svg') }}" alt="Logo">
+  </main>
+
+  <button type="button" class="chat-fab" id="chat-open" aria-label="Buka chatbot Gemini" aria-expanded="false" aria-controls="chat-panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8.5 8.5 0 0 1-12.3 7.6L3.5 21l1.4-4.9A8.5 8.5 0 1 1 21 12z"/></svg></button>
+  <section class="chat-panel" id="chat-panel" role="dialog" aria-label="Chatbot Gemini" hidden>
+    <header><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8.5 8.5 0 0 1-12.3 7.6L3.5 21l1.4-4.9A8.5 8.5 0 1 1 21 12z"/></svg><div><strong>Tanya Gemini</strong><small>Asisten pendaftaran Beyond Code</small></div><button type="button" id="chat-close" aria-label="Tutup chatbot">✕</button></header>
+    <div class="chat-log" id="chat-log" aria-live="polite"></div>
+    <div class="chat-chips" id="chat-chips"><button type="button">Apa saja yang harus diisi?</button><button type="button">Boleh pakai email selain Gmail?</button><button type="button">Bantu saya menulis motivasi</button></div>
+    <form class="chat-form" id="chat-form"><input id="chat-input" type="text" maxlength="500" placeholder="Tulis pertanyaanmu..." autocomplete="off" aria-label="Pesan"><button type="submit" aria-label="Kirim pesan">↑</button></form>
+  </section>
+</body>
+</html>
