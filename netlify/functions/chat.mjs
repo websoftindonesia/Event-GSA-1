@@ -30,15 +30,13 @@ export default async (req) => {
     return json(400, { error: "Pesan kosong." });
   }
 
-  // Gunakan model gemini-1.5-flash dengan endpoint v1beta
-  const model = process.env.GEMINI_MODEL || "gemini-1.5-flash";
+  // Gunakan model gemini-1.5-flash
+  const model = "gemini-1.5-flash";
 
   try {
     const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
       method: "POST",
-      headers: { 
-        "Content-Type": "application/json" 
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         systemInstruction: {
           parts: [{ text: SYSTEM_PROMPT || "Kamu adalah asisten pendaftaran." }]
@@ -49,8 +47,8 @@ export default async (req) => {
 
     if (!res.ok) {
       const errText = await res.text();
-      console.error("Gemini API response not OK:", res.status, errText);
-      return json(502, { error: "Chatbot sedang tidak dapat dihubungi. Coba lagi nanti." });
+      console.error("Gemini API error:", res.status, errText);
+      return json(502, { error: "Gagal terhubung ke layanan Gemini." });
     }
 
     const data = await res.json();
@@ -58,7 +56,7 @@ export default async (req) => {
     
     return json(200, { reply: text || "Maaf, saya belum bisa menjawab itu. Coba tanyakan dengan cara lain." });
   } catch (e) {
-    console.error("Gemini fetch exception:", e);
-    return json(502, { error: "Chatbot sedang tidak dapat dihubungi. Coba lagi nanti." });
+    console.error("Chat exception:", e);
+    return json(500, { error: "Terjadi kesalahan pada server." });
   }
 };
