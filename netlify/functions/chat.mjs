@@ -30,11 +30,10 @@ export default async (req) => {
     return json(400, { error: "Pesan kosong." });
   }
 
-  // Gunakan model gemini-1.5-flash
   const model = "gemini-1.5-flash";
 
   try {
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
+    const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -45,16 +44,16 @@ export default async (req) => {
       })
     });
 
-    if (!res.ok) {
-      const errText = await res.text();
-      console.error("Gemini API error:", res.status, errText);
+    if (!geminiRes.ok) {
+      const errText = await geminiRes.text();
+      console.error("Gemini API error:", geminiRes.status, errText);
       return json(502, { error: "Gagal terhubung ke layanan Gemini." });
     }
 
-    const data = await res.json();
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    const data = await geminiRes.json();
+    const replyText = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, saya belum bisa menjawab itu.";
     
-    return json(200, { reply: text || "Maaf, saya belum bisa menjawab itu. Coba tanyakan dengan cara lain." });
+    return json(200, { reply: replyText });
   } catch (e) {
     console.error("Chat exception:", e);
     return json(500, { error: "Terjadi kesalahan pada server." });
