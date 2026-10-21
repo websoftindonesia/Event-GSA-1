@@ -1,6 +1,7 @@
 (() => {
   const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const smallScreen = matchMedia('(max-width: 760px)').matches;
   if (calm) return;
   const root = document.documentElement;
   const COLORS = ['#4d8dff', '#a77bff', '#ff7a93'];
@@ -35,6 +36,8 @@
   });
 
   /* 4. Jaring partikel interaktif di latar */
+  // Particle animation costs more than it adds on touch and small-screen devices.
+  if (fine && !smallScreen) {
   const cv = Object.assign(document.createElement('canvas'), { className: 'net' });
   document.body.prepend(cv);
   const ctx = cv.getContext('2d');
@@ -65,9 +68,18 @@
       const dm = Math.hypot(a.x - mouse.x, a.y - mouse.y);
       if (dm < 170) { ctx.strokeStyle = `rgba(167,123,255,${(1 - dm / 170) * .55})`; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke(); }
     }
-    requestAnimationFrame(frame);
+    if (!document.hidden) requestAnimationFrame(frame);
   };
-  frame();
+  let lastFrame = 0;
+  const pacedFrame = (time) => {
+    if (document.hidden) return;
+    if (time - lastFrame >= 33) { lastFrame = time; frame(); }
+    else requestAnimationFrame(pacedFrame);
+  };
+  const startFrame = () => { if (!document.hidden) requestAnimationFrame(pacedFrame); };
+  document.addEventListener('visibilitychange', startFrame);
+  startFrame();
+  }
 
   if (fine) {
     /* 5. Foto miring 3D mengikuti kursor */
