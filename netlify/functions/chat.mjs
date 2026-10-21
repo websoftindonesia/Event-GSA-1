@@ -31,7 +31,7 @@ export default async (req) => {
   }
 
   // Menggunakan model gemini-2.0-flash yang stabil
-  const model = "gemini-2.0-flash";
+  const model = "const model = "gemini-3.8-flash";";
 
   try {
     const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
