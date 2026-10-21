@@ -1,11 +1,9 @@
 [build]
-  publish = "dist"
-  command = "mkdir -p dist && cp index.html admin.html styles.css app.js fx.js gemini-mark.svg dist/ && (cp foto-saya.* dist/ || true)"
-
-[functions]
-  directory = "netlify/functions"
+  functions = "netlify/functions"
+  publish = "dist" # Sesuaikan dengan folder build Anda
 
 [[redirects]]
-  from = "/admin"
-  to = "/admin.html"
+  from = "/api/*"
+  to = ".netlify/functions/:splat"
   status = 200
+  force = true
