@@ -10,7 +10,7 @@ export default async (req) => {
     .filter((m) => m && typeof m.text === "string" && ["user", "assistant"].includes(m.role))
     .map((m) => ({ role: m.role === "user" ? "user" : "model", parts: [{ text: m.text.slice(0, 1000) }] }));
   if (!contents.length || contents.at(-1).role !== "user") return json(400, { error: "Pesan kosong." });
-  const model = process.env.GEMINI_MODEL || "gemini-2.0-flash";
+  const model = process.env.GEMINI_MODEL || "gemini-1.5-flash";
   try {
     const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
       method: "POST",
