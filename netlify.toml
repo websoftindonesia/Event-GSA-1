@@ -1,5 +1,5 @@
 [build]
-  command = "mkdir -p dist && cp index.html admin.html styles.css app.js fx.js gemini-mark.svg dist/ || true"
+  command = "mkdir -p dist && cp index.html admin.html styles.css app.js fx.js gemini-mark.svg foto-saya.png dist/ || true"
   publish = "dist"
   functions = "netlify/functions"
 
